@@ -183,18 +183,54 @@ int main(int argc, char *argv[]) {
     //from the program start
     */
 
-    BYTE*b[100];
+    // BYTE*b[100];
+    // clock_t ca, cb;
+    // ca = clock();
+    // for(int i=0;i<100;i++)
+    //     b[i]= mymalloc(1000);
+    // for(int i=0;i<90;i++)
+    //     myfree(b[i]);
+    //         myfree(b[95]);
+    // b[95] = mymalloc(1000);
+    // for(int i=90;i<100;i++)
+    //     myfree(b[i]);
+    // cb = clock();
+    // printf("\nduration: % f\n", (double)(cb - ca));
+    // return 0;
+
+    int possibe_sizes[] = { 1000, 6000, 20000, 30000 };
+    srand(time(0));
+    BYTE* a[100];
     clock_t ca, cb;
     ca = clock();
-    for(int i=0;i<100;i++)
-        b[i]= mymalloc(1000);
-    for(int i=0;i<90;i++)
-        myfree(b[i]);
-            myfree(b[95]);
-    b[95] = mymalloc(1000);
-    for(int i=90;i<100;i++)
-        myfree(b[i]);
+    for (int i = 0; i < 100; i++)
+    {
+        a[i] = mymalloc(possibe_sizes[rand() % 4]);
+    }
+    int count = 0;
+    for (int i = 0; i < 99; i++)
+    {
+        if (rand() % 2 == 0)
+        {
+            myfree(a[i]);
+            a[i] = 0;
+            count++;
+        }
+        if (count >= 50)
+            break;
+    }
+    for (int i = 0; i < 100; i++)
+    {
+        if (a[i] == 0)
+        {
+            a[i] = mymalloc(possibe_sizes[rand() % 4]);
+        }
+    }
+    for (int i = 0; i < 100; i++)
+    {
+        myfree(a[i]);
+    }
     cb = clock();
-    printf("\nduration: % f\n", (double)(cb - ca));
-    return 0;
+    analyze();
+    printf("duration: %f\n", (double)(cb - ca) / CLOCKS_PER_SEC);
 }
